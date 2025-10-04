@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern Tools - Cryptography Learning Platform</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="config.js"></script>
+    <script src="script.js" defer></script>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>🔐 Cryptography Learning Platform</h1>
+            <p>Learn about secret codes and encryption!</p>
+        </header>
+
+        <nav class="navigation">
+            <a href="home.html" class="nav-button">🏠 Home</a>
+            <a href="classical-tools.html" class="nav-button">🔍 Classical Tools</a>
+            <a href="modern-tools.html" class="nav-button active">⚡ Modern Tools</a>
+            <a href="knowledge.html" class="nav-button">📚 Knowledge</a>
+            <a href="daily-puzzle.html" class="nav-button">🚩 Challengese</a>
+        </nav>
+
+        <!-- User Section -->
+        <div class="user-section">
+            <div id="notLoggedIn">
+                <button class="btn btn-primary" onclick="showLoginForm()">Login</button>
+                <button class="btn btn-secondary" onclick="showRegisterForm()">Register</button>
+            </div>
+            <div id="loggedIn" style="display: none;">
+                <span id="usernameDisplay"></span>
+                <button class="btn btn-secondary" onclick="logout()">Logout</button>
+            </div>
+        </div>
+
+        <main class="main-content">
+            <div id="modern" class="page active">
+                <h2>⚡ Modern Cryptographic Tools</h2>
+                <p>These are the tools used today to keep information safe:</p>
+
+                <div class="tool-section">
+                    <h3>Hash Functions</h3>
+                    <p>Turn any text into a unique fingerprint</p>
+                    <div class="cipher-grid">
+                        <div class="cipher-card" data-tool="md5"><h3>MD5</h3></div>
+                        <div class="cipher-card" data-tool="sha-1"><h3>SHA-1</h3></div>
+                        <div class="cipher-card" data-tool="sha-256"><h3>SHA-256</h3></div>
+                        <div class="cipher-card" data-tool="sha-384"><h3>SHA-384</h3></div>
+                        <div class="cipher-card" data-tool="sha-512"><h3>SHA-512</h3></div>
+                    </div>
+                </div>
+
+                <div class="tool-section">
+                    <h3>Cryptography Utilities</h3>
+                    <div class="cipher-grid">
+                        <div class="cipher-card" data-tool="hmac"><h3>HMAC</h3></div>
+                        <div class="cipher-card" data-tool="cipherid"><h3>Cipher Identifier</h3></div>
+                        <div class="cipher-card" data-tool="encoding"><h3>Encodings</h3></div>
+                        <div class="cipher-card" data-tool="random"><h3>Random</h3></div>
+                    </div>
+                </div>
+
+                <div class="tool-section">
+                    <h3>Encryption / Key Exchange</h3>
+                    <div class="cipher-grid">
+                        <div class="cipher-card" data-tool="aes"><h3>AES-GCM</h3></div>
+                        <div class="cipher-card" data-tool="rsa"><h3>RSA-OAEP</h3></div>
+                        <div class="cipher-card" data-tool="diffie"><h3>ECDH (Diffie)</h3></div>
+                        <div class="cipher-card" data-tool="rc4"><h3>RC4 (demo)</h3></div>
+                    </div>
+                </div>
+
+                <div class="modern-info">
+                    <h3>🔬 Understanding Modern Cryptography</h3>
+                    <p>Modern cryptography relies on complex mathematical algorithms and computational hardness assumptions. These tools provide security that's practically unbreakable with current technology.</p>
+                    <div class="info-buttons">
+                        <a href="knowledge.html#modern-section" class="btn btn-secondary">Learn Theory</a>
+                        <a href="classical-tools.html" class="btn btn-primary">Compare with Classical</a>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Canvas & Animation Toggle -->
+        <canvas id="backgroundCanvas"></canvas>
+        <button id="animationToggle" class="animation-toggle">🎬 Toggle Animation</button>
+
+        <!-- Modals (Login/Register & universal cipher modal) -->
+        <div id="loginModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeModal('loginModal')">&times;</span>
+                <h2>Login</h2>
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label>Username:</label>
+                        <input type="text" id="loginUsername" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Password:</label>
+                        <input type="password" id="loginPassword" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Login</button>
+                </form>
+            </div>
+        </div>
+
+        <div id="registerModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeModal('registerModal')">&times;</span>
+                <h2>Register</h2>
+                <form id="registerForm">
+                    <div class="form-group">
+                        <label>Username:</label>
+                        <input type="text" id="registerUsername" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Password:</label>
+                        <input type="password" id="registerPassword" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Register</button>
+                </form>
+            </div>
+        </div>
+
+        <div id="cipherModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeModal('cipherModal')">&times;</span>
+                <div id="cipherContent"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Show modals
+        function showLoginForm(){ document.getElementById('loginModal').style.display='block'; }
+        function showRegisterForm(){ document.getElementById('registerModal').style.display='block'; }
+        function closeModal(modal){ document.getElementById(modal).style.display='none'; }
+
+        // Login/Register functionality
+        function login(username){
+            document.getElementById('notLoggedIn').style.display='none';
+            document.getElementById('loggedIn').style.display='block';
+            document.getElementById('usernameDisplay').textContent=username;
+        }
+
+        function register(username,password){
+            login(username); // auto-login after registration
+        }
+
+        function logout(){
+            document.getElementById('notLoggedIn').style.display='block';
+            document.getElementById('loggedIn').style.display='none';
+        }
+
+        // Event listeners
+        document.getElementById('loginForm').addEventListener('submit', function(e){
+            e.preventDefault();
+            const username = document.getElementById('loginUsername').value;
+            const password = document.getElementById('loginPassword').value;
+            if(username && password){ login(username); closeModal('loginModal'); }
+            else alert('Enter username and password');
+        });
+
+        document.getElementById('registerForm').addEventListener('submit', function(e){
+            e.preventDefault();
+            const username = document.getElementById('registerUsername').value;
+            const password = document.getElementById('registerPassword').value;
+            if(username && password){ register(username,password); closeModal('registerModal'); }
+            else alert('Enter username and password');
+        });
+    </script>
+</body>
+</html>

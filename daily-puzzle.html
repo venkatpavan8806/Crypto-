@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>CTF Challenges - Cryptography Platform</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="config.js"></script>
+  <script src="script.js" defer></script>
+  <style>
+    .challenge-card {
+      background: rgba(20,20,30,0.95);
+      border: 2px solid #4a148c;
+      padding: 15px;
+      border-radius: 12px;
+      margin: 15px 0;
+      transition: all 0.3s ease;
+    }
+    .challenge-card.solved {
+      background: rgba(0, 128, 0, 0.2);
+      border-color: #4caf50;
+    }
+    .challenge-card h3 {
+      margin: 0 0 10px 0;
+      color: #e1bee7;
+    }
+    .points { color: #ffeb3b; font-size: 14px; }
+    .result { margin-top: 8px; font-weight: bold; }
+    .solved-badge {
+      display: inline-block;
+      background: #4caf50;
+      color: white;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 13px;
+      margin-left: 10px;
+    }
+    .attempts-display {
+      color: #aaa;
+      font-size: 13px;
+      margin-top: 5px;
+    }
+    input[type=text] {
+      width: 70%;
+      padding: 6px;
+      margin: 5px 0;
+      border-radius: 6px;
+      border: 1px solid #999;
+    }
+    input[type=text]:disabled {
+      background: #333;
+      cursor: not-allowed;
+    }
+    button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <h1>🚩 Cryptography CTF Platform</h1>
+      <p>Test your cryptography skills with real CTF-style challenges!</p>
+    </header>
+
+    <nav class="navigation">
+      <a href="home.html" class="nav-button">🏠 Home</a>
+      <a href="classical-tools.html" class="nav-button">🔍 Classical Tools</a>
+      <a href="modern-tools.html" class="nav-button">⚡ Modern Tools</a>
+      <a href="knowledge.html" class="nav-button">📚 Knowledge</a>
+      <a href="daily-puzzle.html" class="nav-button active">🚩 Challenges</a>
+    </nav>
+
+    <div class="user-section">
+        <div id="notLoggedIn">
+            <button class="btn btn-primary" onclick="showLoginForm()">Login</button>
+            <button class="btn btn-secondary" onclick="showRegisterForm()">Register</button>
+        </div>
+        <div id="loggedIn" style="display: none;">
+            <span id="usernameDisplay"></span>
+            <button class="btn btn-secondary" onclick="logout()">Logout</button>
+        </div>
+    </div>
+
+    <main class="main-content">
+      <h2>🚩 CTF-Style Cryptography Challenges</h2>
+      <p>Welcome challenger! Solve the cryptographic puzzles below. Each challenge is worth points and requires a flag in the format <code>CTF{...}</code>.</p>
+
+      <div id="challengesContainer" class="challenges-container"></div>
+    </main>
+
+    <canvas id="backgroundCanvas"></canvas>
+    <button id="animationToggle" class="animation-toggle">🎬 Toggle Animation</button>
+  </div>
+
+  <div id="loginModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal('loginModal')">&times;</span>
+        <h2>Login</h2>
+        <form id="loginForm">
+            <div class="form-group">
+                <label>Username:</label>
+                <input type="text" id="loginUsername" required>
+            </div>
+            <div class="form-group">
+                <label>Password:</label>
+                <input type="password" id="loginPassword" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Login</button>
+        </form>
+    </div>
+  </div>
+  <div id="registerModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal('registerModal')">&times;</span>
+        <h2>Register</h2>
+        <form id="registerForm">
+            <div class="form-group">
+                <label>Username:</label><input type="text" id="registerUsername" required>
+            </div>
+            <div class="form-group">
+                <label>Password:</label><input type="password" id="registerPassword" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Register</button>
+        </form>
+    </div>
+  </div>
+
+  <script>
+    const challenges = [
+      {"title":"Caesar Cipher - Easy 1","category":"Classical","points":200,"description":"Decrypt this message with a shift of 3: 'KHOOR'","flag":"CTF{HELLO}"},
+      {"title":"Caesar Cipher - Easy 2","category":"Classical","points":200,"description":"Decrypt this message with a shift of 1: 'IFMMP'","flag":"CTF{HELLO}"},
+      {"title":"Caesar Cipher - Medium 1","category":"Classical","points":400,"description":"Encrypted message: 'WKLV LV D WHVW'. Shift unknown. Find the plaintext.","flag":"CTF{THIS IS A TEST}"},
+      {"title":"Caesar Cipher - Medium 2","category":"Classical","points":400,"description":"Message: 'OLSSV DVYSK'. Shift unknown. Solve.","flag":"CTF{HELLO WORLD}"},
+      {"title":"Caesar Cipher - Hard 1","category":"Classical","points":600,"description":"Ciphertext: 'ZRUOG' encrypted with unknown Caesar shift. Crack it.","flag":"CTF{WORLD}"},
+      {"title":"Caesar Cipher - Hard 2","category":"Classical","points":600,"description":"Ciphertext: 'UHDOO LQIRUPDWLRQ' encrypted with unknown Caesar shift. Solve.","flag":"CTF{REAL INFORMATION}"},
+      {"title":"Vigenère Cipher - Easy 1","category":"Classical","points":200,"description":"Decrypt 'RIJVS' using key 'KEY'.","flag":"CTF{HELLO}"},
+      {"title":"Vigenère Cipher - Easy 2","category":"Classical","points":200,"description":"Ciphertext: 'ZICVTWQNGRZGVTWAVZHCQYGLMGJ' with key 'LEMON'. Decode.","flag":"CTF{ATTACKATDAWN}"},
+      {"title":"Vigenère Cipher - Medium 1","category":"Classical","points":400,"description":"Ciphertext: 'LXFOPVEFRNHR' Key unknown but keyword is 3 letters. Solve.","flag":"CTF{HELLO}"},
+      {"title":"Vigenère Cipher - Medium 2","category":"Classical","points":400,"description":"Encrypted message: 'UVCLQWZTR' Key: 'SUN'. Decrypt it.","flag":"CTF{SOLVED}"},
+      {"title":"Vigenère Cipher - Hard 1","category":"Classical","points":600,"description":"Ciphertext: 'BIPUL RJVYX' with unknown key. Find plaintext.","flag":"CTF{CHALLENGE}"},
+      {"title":"Vigenère Cipher - Hard 2","category":"Classical","points":600,"description":"Ciphertext: 'QNXEPV YPG' unknown key, decrypt fully.","flag":"CTF{COMPLEX}"},
+      {"title":"Substitution Cipher - Easy 1","category":"Classical","points":200,"description":"Decrypt 'QEB NRFZH YOLTK CLU GRJMP LSBO QEB IXWV ALD' using substitution cipher.","flag":"CTF{THE QUICK BROWN FOX JUMPS OVER THE LAZY DOG}"},
+      {"title":"Substitution Cipher - Easy 2","category":"Classical","points":200,"description":"Ciphertext: 'Uifsf jt b tfdsfu dpef' Simple substitution.","flag":"CTF{THERE IS A SECRET CODE}"},
+      {"title":"Substitution Cipher - Medium 1","category":"Classical","points":400,"description":"Ciphertext: 'GIEWIV GMTLIV HIQS' Solve substitution.","flag":"CTF{ATTACK AT DAWN}"},
+      {"title":"Substitution Cipher - Medium 2","category":"Classical","points":400,"description":"Decrypt 'YMNX NX F XJHWJ' unknown mapping.","flag":"CTF{THIS IS A TEST}"},
+      {"title":"Substitution Cipher - Hard 1","category":"Classical","points":600,"description":"Ciphertext: 'ZIT KPJIZ LQTZW' Fully solve substitution.","flag":"CTF{HARD CHALLENGE}"},
+      {"title":"Substitution Cipher - Hard 2","category":"Classical","points":600,"description":"Decrypt 'QEB NRFZH YOLTK CLU GRJMP LSBO QEB IXWV ALD' unknown mapping.","flag":"CTF{THE QUICK BROWN FOX JUMPS OVER THE LAZY DOG}"},
+      {"title":"Affine Cipher - Easy 1","category":"Classical","points":200,"description":"Decrypt 'IHHWVCSWFRCP' using Affine Cipher with a=5, b=8.","flag":"CTF{AFFINE}"},
+      {"title":"Affine Cipher - Easy 2","category":"Classical","points":200,"description":"Ciphertext: 'ZEBBW' a=3, b=2, decrypt.","flag":"CTF{HELLO}"},
+      {"title":"Affine Cipher - Medium 1","category":"Classical","points":400,"description":"Ciphertext: 'XPCYL' a=7, b=3, decrypt.","flag":"CTF{WORLD}"},
+      {"title":"Affine Cipher - Medium 2","category":"Classical","points":400,"description":"Decrypt 'GSV JFRXP YILDM' with a=5, b=8.","flag":"CTF{THE QUICK BROWN}"},
+      {"title":"Affine Cipher - Hard 1","category":"Classical","points":600,"description":"Ciphertext: 'MNOPQR' a=11, b=7. Solve.","flag":"CTF{COMPLEX}"},
+      {"title":"Affine Cipher - Hard 2","category":"Classical","points":600,"description":"Ciphertext: 'WTAAD LDGAS' unknown a and b. Solve.","flag":"CTF{AFFINE HARD}"},
+      {"title":"Playfair Cipher - Easy 1","category":"Classical","points":200,"description":"Decrypt 'BM OD ZB XD NA BE KU DM UI XM MO UV IF' with key 'MONARCHY'.","flag":"CTF{HIDING MESSAGE}"},
+      {"title":"Playfair Cipher - Easy 2","category":"Classical","points":200,"description":"Ciphertext: 'GATLMZCLQQY' Key='KEYWORD'","flag":"CTF{HELLO}"},
+      {"title":"Playfair Cipher - Medium 1","category":"Classical","points":400,"description":"Decrypt 'POHLMW ZI YV BW' with key 'SECURE'.","flag":"CTF{SOLVED}"},
+      {"title":"Playfair Cipher - Medium 2","category":"Classical","points":400,"description":"Ciphertext: 'BMODZ BXDN' Key='MONARCHY'.","flag":"CTF{CHALLENGE}"},
+      {"title":"Playfair Cipher - Hard 1","category":"Classical","points":600,"description":"Decrypt 'RFKTMBXVVW' Key='COMPLEX'.","flag":"CTF{HARD}"},
+      {"title":"Playfair Cipher - Hard 2","category":"Classical","points":600,"description":"Ciphertext: 'QQYBDEOZL' Key unknown. Solve.","flag":"CTF{HARD CHALLENGE}"},
+      {"title":"Hill Cipher - Easy 1","category":"Classical","points":200,"description":"Decrypt 'HF' using Hill Cipher 2x2 with matrix [[3,3],[2,5]].","flag":"CTF{HI}"},
+      {"title":"Hill Cipher - Easy 2","category":"Classical","points":200,"description":"Ciphertext: 'ROVVY' Key matrix [[7,8],[11,11]] decrypt.","flag":"CTF{HELLO}"},
+      {"title":"Hill Cipher - Medium 1","category":"Classical","points":400,"description":"Decrypt 'ZICVT' 2x2 matrix key unknown, use trial.","flag":"CTF{WORLD}"},
+      {"title":"Hill Cipher - Medium 2","category":"Classical","points":400,"description":"Ciphertext: 'KSMEH ZBBLK' 3x3 matrix known. Solve.","flag":"CTF{COMPLEX}"},
+      {"title":"Hill Cipher - Hard 1","category":"Classical","points":600,"description":"Decrypt 'POHLMWZ' 3x3 unknown key.","flag":"CTF{HARD}"},
+      {"title":"Hill Cipher - Hard 2","category":"Classical","points":600,"description":"Ciphertext: 'XJNRMKQ' Solve using Hill Cipher.","flag":"CTF{CHALLENGE}"},
+      {"title":"Transposition Cipher - Easy 1","category":"Classical","points":200,"description":"Decrypt 'HWEOLRLDO' using columnar transposition with 3 columns.","flag":"CTF{HELLOWORLD}"},
+      {"title":"Transposition Cipher - Easy 2","category":"Classical","points":200,"description":"Ciphertext: 'TAHS SI AN EXAMPL' Rearrange by columns 4.","flag":"CTF{THIS IS AN EXAMPLE}"},
+      {"title":"Transposition Cipher - Medium 1","category":"Classical","points":400,"description":"Ciphertext: 'HLOOLELWRD' Columns=2. Solve.","flag":"CTF{HELLOWORLD}"},
+      {"title":"Transposition Cipher - Medium 2","category":"Classical","points":400,"description":"Encrypted: 'TAHISSIANEXAMPL' Columns=3. Solve.","flag":"CTF{THISISANEXAMPLE}"},
+      {"title":"Transposition Cipher - Hard 1","category":"Classical","points":600,"description":"Ciphertext: 'LLOHWEORLDD' Columns unknown. Solve.","flag":"CTF{HELLOWORLD}"},
+      {"title":"Transposition Cipher - Hard 2","category":"Classical","points":600,"description":"Ciphertext: 'HETSI SI XMPLEA NA' Columns unknown. Solve.","flag":"CTF{THISISANEXAMPLE}"},
+      {"title":"MD5 Hash - Easy 1","category":"Modern","points":200,"description":"Compute MD5 of 'crypto'.","flag":"CTF{827ccb0eea8a706c4c34a16891f84e7b}"},
+      {"title":"MD5 Hash - Easy 2","category":"Modern","points":200,"description":"Compute MD5 of 'hello'.","flag":"CTF{5d41402abc4b2a76b9719d911017c592}"},
+      {"title":"SHA-1 - Medium 1","category":"Modern","points":400,"description":"Compute SHA-1 hash of 'test'.","flag":"CTF{a94a8fe5ccb19ba61c4c0873d391e987982fbbd3}"},
+      {"title":"SHA-1 - Medium 2","category":"Modern","points":400,"description":"Compute SHA-1 of 'password'.","flag":"CTF{5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8}"},
+      {"title":"SHA-256 - Hard 1","category":"Modern","points":600,"description":"Compute SHA-256 hash of 'challenge'.","flag":"CTF{2d711642b726b04401627ca9fbac32f5c57f3c89b3e0f3c8bbd0e42c9d9fdf52}"},
+      {"title":"SHA-256 - Hard 2","category":"Modern","points":600,"description":"Compute SHA-256 hash of 'cryptography'.","flag":"CTF{e1aa0c379e65b03b73004d8cdb19c34206e5d3f2189f3d0f25e759eb3b56f7b7}"},
+      {"title":"AES-GCM - Medium 1","category":"Modern","points":400,"description":"AES-GCM ciphertext with key '00112233445566778899aabbccddeeff' Ciphertext: '8d20e5056a8df0f0'. Decrypt.","flag":"CTF{AES_DECRYPTED}"},
+      {"title":"AES-GCM - Medium 2","category":"Modern","points":400,"description":"AES-GCM ciphertext: '5f8d1a2b3c4d' Key known. Decrypt.","flag":"CTF{AES_CHALLENGE}"},
+      {"title":"RSA-OAEP - Hard 1","category":"Modern","points":600,"description":"RSA-OAEP ciphertext given, decrypt using provided private key.","flag":"CTF{RSA_DECRYPT}"},
+      {"title":"RSA-OAEP - Hard 2","category":"Modern","points":600,"description":"Decrypt RSA-OAEP ciphertext with known modulus and private exponent.","flag":"CTF{RSA_CHALLENGE}"},
+      {"title":"RC4 - Medium 1","category":"Modern","points":400,"description":"RC4 ciphertext with key 'KEY123'. Decrypt.","flag":"CTF{RC4_DECRYPTED}"},
+      {"title":"RC4 - Medium 2","category":"Modern","points":400,"description":"Ciphertext encrypted with RC4, key='SECRET'. Decrypt.","flag":"CTF{RC4_CHALLENGE}"}
+    ];
+
+    function loadChallenges() {
+      const container = document.getElementById("challengesContainer");
+      challenges.forEach((ch, idx) => {
+        const isSolved = localStorage.getItem(`solved-${idx}`) === 'true';
+        const attempts = parseInt(localStorage.getItem(`attempts-${idx}`) || '0');
+        
+        const div = document.createElement("div");
+        div.className = "challenge-card" + (isSolved ? " solved" : "");
+        div.innerHTML = `
+          <h3>${ch.title} <span class="points">[${ch.points} pts]</span>${isSolved ? '<span class="solved-badge">✅ Challenge Solved!</span>' : ''}</h3>
+          <p><strong>Category:</strong> ${ch.category}</p>
+          <p>${ch.description}</p>
+          ${attempts > 0 && !isSolved ? `<div class="attempts-display">Attempts: ${attempts}</div>` : ''}
+          <input type="text" id="answer-${idx}" placeholder="Enter flag (CTF{...})" ${isSolved ? 'disabled' : ''}>
+          <button class="btn btn-primary" onclick="checkAnswer(${idx})" ${isSolved ? 'disabled' : ''}>Submit</button>
+          <div id="result-${idx}" class="result"></div>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    function checkAnswer(idx) {
+      const isSolved = localStorage.getItem(`solved-${idx}`) === 'true';
+      if (isSolved) {
+        return; // Prevent checking if already solved
+      }
+
+      const input = document.getElementById(`answer-${idx}`).value.trim();
+      const result = document.getElementById(`result-${idx}`);
+      let attempts = parseInt(localStorage.getItem(`attempts-${idx}`) || '0');
+      attempts++;
+      localStorage.setItem(`attempts-${idx}`, attempts);
+  
+      if (input === challenges[idx].flag) {
+        result.innerHTML = "<span style='color:lime;'>✅ Correct! Solved in " + attempts + " attempt(s)!</span>";
+        updateSolvedCount();
+        localStorage.setItem(`solved-${idx}`, 'true');
+        
+        // Disable input and button
+        document.getElementById(`answer-${idx}`).disabled = true;
+        const button = document.querySelector(`#challengesContainer > div:nth-child(${idx + 1}) button`);
+        if (button) button.disabled = true;
+        
+        // Update card appearance
+        const card = document.querySelector(`#challengesContainer > div:nth-child(${idx + 1})`);
+        card.classList.add('solved');
+        
+        // Add solved badge
+        const h3 = card.querySelector('h3');
+        if (h3 && !h3.querySelector('.solved-badge')) {
+          h3.innerHTML += '<span class="solved-badge">✅ Challenge Solved!</span>';
+        }
+      } else {
+        result.innerHTML = "<span style='color:red;'>❌ Wrong flag! (Attempt " + attempts + ")</span>";
+        // Update attempts display
+        const attemptsDiv = document.querySelector(`#challengesContainer > div:nth-child(${idx + 1}) .attempts-display`);
+        if (attemptsDiv) {
+          attemptsDiv.textContent = `Attempts: ${attempts}`;
+        } else {
+          const card = document.querySelector(`#challengesContainer > div:nth-child(${idx + 1})`);
+          const desc = card.querySelector('p:last-of-type');
+          const newDiv = document.createElement('div');
+          newDiv.className = 'attempts-display';
+          newDiv.textContent = `Attempts: ${attempts}`;
+          desc.parentNode.insertBefore(newDiv, desc.nextSibling);
+        }
+      }
+    }
+
+    function updateSolvedCount() {
+      let solvedCount = parseInt(localStorage.getItem('solvedCount') || '0');
+      solvedCount++;
+      localStorage.setItem('solvedCount', solvedCount);
+    }
+
+    document.addEventListener("DOMContentLoaded", loadChallenges);
+  </script>
+</body>
+</html>

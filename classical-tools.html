@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Classical Tools - Cryptography Learning Platform</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="config.js"></script>
+    <script src="script.js" defer></script>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>🔐 Cryptography Learning Platform</h1>
+            <p>Learn about secret codes and encryption!</p>
+        </header>
+
+        <nav class="navigation">
+            <a href="home.html" class="nav-button">🏠 Home</a>
+            <a href="classical-tools.html" class="nav-button active">🔍 Classical Tools</a>
+            <a href="modern-tools.html" class="nav-button">⚡ Modern Tools</a>
+            <a href="knowledge.html" class="nav-button">📚 Knowledge</a>
+            <a href="daily-puzzle.html" class="nav-button">🚩 Challenges</a>
+        </nav>
+
+        <div class="user-section">
+            <div id="notLoggedIn">
+                <button class="btn btn-primary" onclick="showLoginForm()">Login</button>
+                <button class="btn btn-secondary" onclick="showRegisterForm()">Register</button>
+            </div>
+            <div id="loggedIn" style="display: none;">
+                <span id="usernameDisplay"></span>
+                <button class="btn btn-secondary" onclick="logout()">Logout</button>
+            </div>
+        </div>
+
+        <main class="main-content">
+            <div id="classical" class="page active">
+                <h2>🔍 Classical Cryptographic Tools</h2>
+                <p>These are old methods people used to send secret messages:</p>
+
+                <div class="cipher-grid">
+                    <div class="cipher-card" data-tool="caesar">
+                        <h3>Caesar Cipher</h3>
+                        <p>Shift letters by a fixed number</p>
+                    </div>
+                    <div class="cipher-card" data-tool="vigenere">
+                        <h3>Vigenère Cipher</h3>
+                        <p>Use a keyword to encrypt</p>
+                    </div>
+                    <div class="cipher-card" data-tool="substitution">
+                        <h3>Substitution Cipher</h3>
+                        <p>Replace each letter with another</p>
+                    </div>
+                    <div class="cipher-card" data-tool="affine">
+                        <h3>Affine Cipher</h3>
+                        <p>Linear transformation cipher</p>
+                    </div>
+                    <div class="cipher-card" data-tool="playfair">
+                        <h3>Playfair Cipher</h3>
+                        <p>Digraphic substitution</p>
+                    </div>
+                    <div class="cipher-card" data-tool="hill">
+                        <h3>Hill Cipher</h3>
+                        <p>Matrix-based encryption</p>
+                    </div>
+                    <div class="cipher-card" data-tool="transposition">
+                        <h3>Transposition Cipher</h3>
+                        <p>Rail fence & columnar</p>
+                    </div>
+                    <div class="cipher-card" data-tool="otp">
+                        <h3>One-Time Pad</h3>
+                        <p>Perfect secrecy cipher</p>
+                    </div>
+                    <div class="cipher-card" data-tool="autokey">
+                        <h3>Autokey Cipher</h3>
+                        <p>Self-generating key stream</p>
+                    </div>
+                    <div class="cipher-card" data-tool="atbash">
+                        <h3>Atbash Cipher</h3>
+                        <p>Alphabet mirror</p>
+                    </div>
+                    <div class="cipher-card" data-tool="polybius">
+                        <h3>Polybius Square</h3>
+                        <p>Coordinates grid</p>
+                    </div>
+                    <div class="cipher-card" data-tool="a1z26">
+                        <h3>A1Z26</h3>
+                        <p>Letter ↔ number</p>
+                    </div>
+                    <div class="cipher-card" data-tool="baconian">
+                        <h3>Baconian Cipher</h3>
+                        <p>A/B 5-bit encoding</p>
+                    </div>
+                    <div class="cipher-card" data-tool="trithemius">
+                        <h3>Trithemius</h3>
+                        <p>Progressive shifts</p>
+                    </div>
+                    <div class="cipher-card" data-tool="solitaire">
+                        <h3>Solitaire (demo)</h3>
+                        <p>Card-based keystream (demo)</p>
+                    </div>
+                </div>
+
+                <div class="classical-info">
+                    <h3>📚 Learn More About Classical Ciphers</h3>
+                    <p>Classical ciphers form the foundation of modern cryptography. While they may seem simple by today's standards, understanding how they work helps build intuition for more complex systems.</p>
+                    <div class="info-buttons">
+                        <a href="knowledge.html#classical-section" class="btn btn-secondary">Read Theory</a>
+                        <a href="daily-puzzle.html" class="btn btn-primary">Practice with Puzzles</a>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <canvas id="backgroundCanvas"></canvas>
+        <button id="animationToggle" class="animation-toggle">🎬 Toggle Animation</button>
+    </div>
+
+    <!-- Login/Register Modals -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('loginModal')">&times;</span>
+            <h2>Login</h2>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label>Username:</label>
+                    <input type="text" id="loginUsername" required>
+                </div>
+                <div class="form-group">
+                    <label>Password:</label>
+                    <input type="password" id="loginPassword" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Login</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="registerModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('registerModal')">&times;</span>
+            <h2>Register</h2>
+            <form id="registerForm">
+                <div class="form-group">
+                    <label>Username:</label><input type="text" id="registerUsername" required>
+                </div>
+                <div class="form-group">
+                    <label>Password:</label><input type="password" id="registerPassword" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Register</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Cipher Modal -->
+    <div id="cipherModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('cipherModal')">&times;</span>
+            <div id="cipherContent"></div>
+        </div>
+    </div>
+
+    <script>
+        // Show modals
+        function showLoginForm(){ document.getElementById('loginModal').style.display='block'; }
+        function showRegisterForm(){ document.getElementById('registerModal').style.display='block'; }
+        function closeModal(modal){ document.getElementById(modal).style.display='none'; }
+
+        // Login/Register functionality
+        function login(username){
+            document.getElementById('notLoggedIn').style.display='none';
+            document.getElementById('loggedIn').style.display='block';
+            document.getElementById('usernameDisplay').textContent=username;
+            window.location.href = "dashboard.html"; // redirect to dashboard after login
+        }
+
+        function register(username,password){
+            login(username); // auto-login after registration
+        }
+
+        function logout(){
+            document.getElementById('notLoggedIn').style.display='block';
+            document.getElementById('loggedIn').style.display='none';
+        }
+
+        // Event listeners
+        document.getElementById('loginForm').addEventListener('submit', function(e){
+            e.preventDefault();
+            const username = document.getElementById('loginUsername').value;
+            const password = document.getElementById('loginPassword').value;
+            if(username && password){ login(username); closeModal('loginModal'); }
+            else alert('Enter username and password');
+        });
+
+        document.getElementById('registerForm').addEventListener('submit', function(e){
+            e.preventDefault();
+            const username = document.getElementById('registerUsername').value;
+            const password = document.getElementById('registerPassword').value;
+            if(username && password){ register(username,password); closeModal('registerModal'); }
+            else alert('Enter username and password');
+        });
+    </script>
+</body>
+</html>

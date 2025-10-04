@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home - Cryptography Learning Platform</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="config.js"></script>
+    <script src="script.js" defer></script>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>🔐 Cryptography Learning Platform</h1>
+            <p>Learn about secret codes and encryption!</p>
+        </header>
+
+        <nav class="navigation">
+            <a href="home.html" class="nav-button active">🏠 Home</a>
+            <a href="classical-tools.html" class="nav-button">🔍 Classical Tools</a>
+            <a href="modern-tools.html" class="nav-button">⚡ Modern Tools</a>
+            <a href="knowledge.html" class="nav-button">📚 Knowledge</a>
+            <a href="daily-puzzle.html" class="nav-button">🚩 Challenges</a>
+        </nav>
+
+        <div class="user-section">
+            <div id="notLoggedIn">
+                <button class="btn btn-primary" onclick="showLoginForm()">Login</button>
+                <button class="btn btn-secondary" onclick="showRegisterForm()">Register</button>
+            </div>
+            <div id="loggedIn" style="display: none;">
+                <span id="usernameDisplay"></span>
+                <button class="btn btn-secondary" onclick="logout()">Logout</button>
+            </div>
+        </div>
+
+        <main class="main-content">
+            <div id="home" class="page active">
+                <h2>Welcome to Cryptography!</h2>
+                <p>This is a learning platform where you can:</p>
+                <ul>
+                    <li>Learn about old secret codes (like Caesar cipher)</li>
+                    <li>Try modern encryption tools</li>
+                    <li>Solve daily puzzles</li>
+                    <li>Track your learning progress</li>
+                </ul>
+
+                <div class="quick-start">
+                    <h3>Quick Start</h3>
+                    <div class="quick-buttons">
+                        <a href="classical-tools.html" class="btn btn-primary">Try Classical Ciphers</a>
+                        <a href="daily-puzzle.html" class="btn btn-primary">Solve Cryptographic Challenges</a>
+                        <a href="modern-tools.html" class="btn btn-primary">Try Modern Tools</a>
+                    </div>
+                </div>
+
+                <div class="feature-highlights">
+                    <h3>🎯 What You'll Learn</h3>
+                    <div class="highlight-grid">
+                        <div class="highlight-card">
+                            <h4>🔍 Classical Ciphers</h4>
+                            <p>Master ancient encryption techniques from Caesar to Playfair</p>
+                        </div>
+                        <div class="highlight-card">
+                            <h4>⚡ Modern Tools</h4>
+                            <p>Explore hash functions, HMAC, AES encryption, and more</p>
+                        </div>
+                        <div class="highlight-card">
+                            <h4>📚 Knowledge Base</h4>
+                            <p>Comprehensive learning resources with progress tracking</p>
+                        </div>
+                        <div class="highlight-card">
+                            <h4>🚩 Challenges</h4>
+                            <p>Solve cryptographic puzzles to test your skills</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <canvas id="backgroundCanvas"></canvas>
+        <button id="animationToggle" class="animation-toggle">🎬 Toggle Animation</button>
+    </div>
+
+    <!-- Modals (Login/Register & universal cipher modal) -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('loginModal')">&times;</span>
+            <h2>Login</h2>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label>Username:</label>
+                    <input type="text" id="loginUsername" required>
+                </div>
+                <div class="form-group">
+                    <label>Password:</label>
+                    <input type="password" id="loginPassword" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Login</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="registerModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('registerModal')">&times;</span>
+            <h2>Register</h2>
+            <form id="registerForm">
+                <div class="form-group">
+                    <label>Username:</label>
+                    <input type="text" id="registerUsername" required>
+                </div>
+                <div class="form-group">
+                    <label>Password:</label>
+                    <input type="password" id="registerPassword" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Register</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Universal Cipher Modal (used by script.js) -->
+    <div id="cipherModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('cipherModal')">&times;</span>
+            <div id="cipherContent"></div>
+        </div>
+    </div>
+
+    <script>
+        // Show modals
+        function showLoginForm(){ document.getElementById('loginModal').style.display='block'; }
+        function showRegisterForm(){ document.getElementById('registerModal').style.display='block'; }
+        function closeModal(modal){ document.getElementById(modal).style.display='none'; }
+
+        // Login/Register functionality
+        function login(username){
+            document.getElementById('notLoggedIn').style.display='none';
+            document.getElementById('loggedIn').style.display='block';
+            document.getElementById('usernameDisplay').textContent=username;
+        }
+
+        function register(username,password){
+            // For demo purposes, just login after registration
+            login(username);
+        }
+
+        function logout(){
+            document.getElementById('notLoggedIn').style.display='block';
+            document.getElementById('loggedIn').style.display='none';
+        }
+
+        // Event listeners
+        document.getElementById('loginForm').addEventListener('submit', function(e){
+            e.preventDefault();
+            const username = document.getElementById('loginUsername').value;
+            const password = document.getElementById('loginPassword').value;
+            if(username && password){ login(username); closeModal('loginModal'); }
+            else alert('Enter username and password');
+        });
+
+        document.getElementById('registerForm').addEventListener('submit', function(e){
+            e.preventDefault();
+            const username = document.getElementById('registerUsername').value;
+            const password = document.getElementById('registerPassword').value;
+            if(username && password){ register(username,password); closeModal('registerModal'); }
+            else alert('Enter username and password');
+        });
+    </script>
+</body>
+</html>

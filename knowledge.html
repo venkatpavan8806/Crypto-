@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Knowledge - Cryptography Learning Platform</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="config.js"></script>
+    <script src="script.js" defer></script>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>🔐 Cryptography Learning Platform</h1>
+            <p>Learn about secret codes and encryption!</p>
+        </header>
+
+        <nav class="navigation">
+            <a href="home.html" class="nav-button">🏠 Home</a>
+            <a href="classical-tools.html" class="nav-button">🔍 Classical Tools</a>
+            <a href="modern-tools.html" class="nav-button">⚡ Modern Tools</a>
+            <a href="knowledge.html" class="nav-button active">📚 Knowledge</a>
+            <a href="daily-puzzle.html" class="nav-button">🚩 Challenges</a>
+        </nav>
+
+        <!-- User Section (Login/Register) -->
+        <div class="user-section">
+            <div id="notLoggedIn">
+                <button class="btn btn-primary" onclick="showLoginForm()">Login</button>
+                <button class="btn btn-secondary" onclick="showRegisterForm()">Register</button>
+            </div>
+            <div id="loggedIn" style="display: none;">
+                <span id="usernameDisplay"></span>
+                <button class="btn btn-secondary" onclick="logout()">Logout</button>
+            </div>
+        </div>
+
+        <main class="main-content">
+            <div id="knowledge" class="page active">
+                <h2>📚 Complete Cryptography Reference</h2>
+                <p>Comprehensive learning resources:</p>
+
+                <div class="knowledge-nav">
+                    <button onclick="scrollToSection('intro-section')" class="nav-btn">🔰 Introduction</button>
+                    <button onclick="scrollToSection('classical-section')" class="nav-btn">🔍 Classical Ciphers</button>
+                    <button onclick="scrollToSection('modern-section')" class="nav-btn">⚡ Modern Tools</button>
+                    <button onclick="scrollToSection('security-section')" class="nav-btn">🛡️ Security Concepts</button>
+                </div>
+
+                <!-- Introduction Section -->
+                <div class="knowledge-section" id="intro-section">
+                    <h3>🔰 Introduction to Cryptography</h3>
+                    <div class="knowledge-card">
+                        <h4>What is Cryptography?</h4>
+                        <p>Cryptography is the art and science of securing information by transforming it into an unreadable format. It involves creating codes and ciphers to protect data from unauthorized access, ensuring confidentiality, integrity, and authenticity in digital communications.</p>
+                    </div>
+                    <div class="knowledge-card">
+                        <h4>Classical vs Modern Cryptography</h4>
+                        <p>Classical cryptography uses simple mathematical operations and manual techniques, while modern cryptography employs complex algorithms, computer processing, and mathematical theories to provide robust security for digital systems.</p>
+                    </div>
+                </div>
+
+                <!-- Classical Ciphers Section -->
+                <div class="knowledge-section" id="classical-section">
+                    <h3>🔍 Classical Cryptographic Ciphers</h3>
+                    <div class="knowledge-card">
+                        <h4>Caesar Cipher</h4>
+                        <p><strong>What:</strong> A very simple substitution that shifts every letter by the same number.</p>
+                        <p><strong>How:</strong> Choose a shift (e.g., 3). A → D, B → E, …, wrap after Z. Encryption and decryption are the same opposite shift.</p>
+                        <p><strong>History:</strong> Named after Julius Caesar, who used it for short military orders around 100 BCE.</p>
+                    </div>
+                    <div class="knowledge-card">
+                        <h4>Atbash Cipher</h4>
+                        <p><strong>What:</strong> A fixed substitution that maps the alphabet to its reverse.</p>
+                        <p><strong>How:</strong> A ↔ Z, B ↔ Y, C ↔ X, etc.</p>
+                        <p><strong>History:</strong> Appears in ancient Hebrew usage and religious texts.</p>
+                    </div>
+                    <div class="knowledge-card">
+                        <h4>Substitution Cipher (monoalphabetic)</h4>
+                        <p><strong>What:</strong> Any cipher that replaces each letter with another fixed letter or symbol.</p>
+                        <p><strong>How:</strong> Create a mapping like A→Q, B→M, C→T and use it consistently.</p>
+                        <p><strong>History:</strong> Used by traders, diplomats, and in puzzle magazines for centuries.</p>
+                    </div>
+                    <div class="knowledge-card">
+                        <h4>Affine Cipher</h4>
+                        <p><strong>What:</strong> A substitution cipher that uses a simple linear function on letter indices.</p>
+                        <p><strong>How:</strong> Convert letters to numbers (A=0..Z=25) and compute (a*x + b) mod 26.</p>
+                        <p><strong>History:</strong> Mathematical refinement of substitution ciphers.</p>
+                    </div>
+                    <div class="knowledge-card">
+                        <h4>Vigenère Cipher</h4>
+                        <p><strong>What:</strong> A polyalphabetic substitution using a repeating keyword to vary shifts.</p>
+                        <p><strong>How:</strong> Write the keyword above the plaintext, repeat it, and shift each letter accordingly.</p>
+                        <p><strong>History:</strong> First described in the 1500s (Bellaso) and later associated with Blaise de Vigenère.</p>
+                    </div>
+                </div>
+
+                <!-- Modern Tools Section -->
+                <div class="knowledge-section" id="modern-section">
+                    <h3>⚡ Modern Cryptographic Tools</h3>
+                    <div class="knowledge-card">
+                        <h4>RSA (Public-key / Asymmetric)</h4>
+                        <p><strong>What:</strong> An algorithm where two keys are used — a public key to encrypt or verify, and a private key to decrypt or sign.</p>
+                        <p><strong>How:</strong> Choose two large random primes p and q, compute n = p*q and φ(n)=(p-1)(q-1). Choose public exponent e, compute d as the modular inverse of e modulo φ(n).</p>
+                        <p><strong>History:</strong> Published in 1977 by Rivest, Shamir, and Adleman.</p>
+                    </div>
+                    <div class="knowledge-card">
+                        <h4>Diffie–Hellman Key Exchange</h4>
+                        <p><strong>What:</strong> A method for two parties to establish a shared secret over an insecure channel.</p>
+                        <p><strong>How:</strong> Public parameters (prime p and base g). Party A picks secret a and sends A = g^a mod p. Party B picks secret b and sends B = g^b mod p.</p>
+                        <p><strong>History:</strong> Introduced in 1976 by Whitfield Diffie and Martin Hellman.</p>
+                    </div>
+                    <div class="knowledge-card">
+                        <h4>SHA Family (SHA-1, SHA-2, SHA-3)</h4>
+                        <p><strong>What:</strong> Hash functions for integrity and cryptographic applications.</p>
+                        <p><strong>How:</strong> Block-processing with rotations and bitwise operations, producing fixed-size digests.</p>
+                        <p><strong>History:</strong> SHA-1 deprecated; SHA-2 (2001) widely used; SHA-3 standardized later.</p>
+                    </div>
+                    <div class="knowledge-card">
+                        <h4>MD5</h4>
+                        <p><strong>What:</strong> Hash function producing a 128-bit digest.</p>
+                        <p><strong>History:</strong> Published in 1992, widely used for checksums; now deprecated for secure use.</p>
+                    </div>
+                    <div class="knowledge-card">
+                        <h4>HMAC</h4>
+                        <p><strong>What:</strong> Hash-based Message Authentication Code using a secret key and hash function.</p>
+                        <p><strong>History:</strong> Used in TLS, API signing, and token authentication.</p>
+                    </div>
+                    <div class="knowledge-card">
+                        <h4>PBKDF2</h4>
+                        <p><strong>What:</strong> Converts a password into a derived key with computational cost to slow attackers.</p>
+                        <p><strong>History:</strong> Standardized in PKCS #5; used for secure password storage.</p>
+                    </div>
+                    <div class="knowledge-card">
+                        <h4>AES</h4>
+                        <p><strong>What:</strong> Symmetric block cipher for fixed-size data blocks.</p>
+                        <p><strong>How:</strong> Substitution-permutation network, multiple rounds, key sizes 128/192/256 bits.</p>
+                        <p><strong>History:</strong> NIST selected in 2001; based on Rijndael cipher.</p>
+                    </div>
+                    <div class="knowledge-card">
+                        <h4>RC4</h4>
+                        <p><strong>What:</strong> Stream cipher producing a keystream XORed with plaintext.</p>
+                        <p><strong>History:</strong> Designed in 1987, used in WEP/SSL; now deprecated.</p>
+                    </div>
+                    <div class="knowledge-card">
+                        <h4>Base64 / Base32</h4>
+                        <p><strong>What:</strong> Encode binary data into readable ASCII.</p>
+                        <p><strong>History:</strong> Developed for safe transport over text-based systems.</p>
+                    </div>
+                </div>
+
+                <!-- Security Concepts Section -->
+                <div class="knowledge-section" id="security-section">
+                    <h3>🛡️ Security Concepts & Cryptanalysis</h3>
+                    <div class="knowledge-card">
+                        <h4>Cipher Identifier</h4>
+                        <p>Inspects ciphertext and suggests possible ciphers or encodings.</p>
+                    </div>
+                    <div class="knowledge-card">
+                        <h4>Frequency Analysis</h4>
+                        <p>Analyzes letter frequencies to help break monoalphabetic ciphers.</p>
+                    </div>
+                    <div class="knowledge-card">
+                        <h4>N-gram Counters & Index of Coincidence</h4>
+                        <p>Measures frequency of n-letter sequences; calculates IC to detect polyalphabetic patterns.</p>
+                    </div>
+                    <div class="knowledge-card">
+                        <h4>Crib-dragging / Known-Plaintext Tools</h4>
+                        <p>Uses known plaintext to recover keys or decryptions efficiently.</p>
+                    </div>
+                    <div class="knowledge-card">
+                        <h4>Brute-force Helpers</h4>
+                        <p>Tools to exhaustively try keyspaces with masks, wordlists, and rules.</p>
+                    </div>
+                    <div class="knowledge-card">
+                        <h4>Random Number Generation (PRNG & CSPRNG)</h4>
+                        <p>Generates sequences for keys, nonces, IVs, salts; strong CSPRNGs are critical for security.</p>
+                    </div>
+                    <div class="knowledge-card">
+                        <h4>Prime Factoring</h4>
+                        <p>Methods to factor composite numbers into primes; hardness underpins RSA security.</p>
+                    </div>
+                    <div class="knowledge-card">
+                        <h4>Discrete Logarithm Helpers</h4>
+                        <p>Algorithms for discrete log problems; basis for Diffie–Hellman and some signatures.</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Modals (Login/Register & universal cipher modal) -->
+        <div id="loginModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeModal('loginModal')">&times;</span>
+                <h2>Login</h2>
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label>Username:</label>
+                        <input type="text" id="loginUsername" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Password:</label>
+                        <input type="password" id="loginPassword" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Login</button>
+                </form>
+            </div>
+        </div>
+
+        <div id="registerModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeModal('registerModal')">&times;</span>
+                <h2>Register</h2>
+                <form id="registerForm">
+                    <div class="form-group">
+                        <label>Username:</label>
+                        <input type="text" id="registerUsername" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Password:</label>
+                        <input type="password" id="registerPassword" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Register</button>
+                </form>
+            </div>
+        </div>
+
+        <div id="cipherModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeModal('cipherModal')">&times;</span>
+                <div id="cipherContent"></div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
